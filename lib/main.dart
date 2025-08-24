@@ -1,8 +1,15 @@
+import 'package:cdgi_admin/screens/login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'firebase_options.dart';
 import 'screens/admin_dashboard.dart';
 import 'dart:ui';
 
-void main() {
+void main() async{
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MunicipalAdminApp());
 }
 
@@ -55,7 +62,7 @@ class MunicipalAdminApp extends StatelessWidget {
           ),
         ),
       ),
-      home: AdminDashboard(),
+      home: const LoginScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
