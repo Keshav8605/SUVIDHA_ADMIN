@@ -590,8 +590,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           barTouchData: BarTouchData(
             enabled: true,
             touchTooltipData: BarTouchTooltipData(
-              tooltipBgColor: const Color(0xFF1E293B),
-              tooltipRoundedRadius: 8,
+              tooltipBorderRadius: BorderRadius.circular(8),
+
+              // tooltipBgColor: const Color(0xFF1E293B),
+              // tooltipRoundedRadius: 8,
               tooltipMargin: 8,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
