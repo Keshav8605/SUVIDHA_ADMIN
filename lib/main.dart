@@ -5,11 +5,8 @@ import 'firebase_options.dart';
 import 'screens/admin_dashboard.dart';
 import 'dart:ui';
 
-void main() async{
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+void main() async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MunicipalAdminApp());
 }
 
