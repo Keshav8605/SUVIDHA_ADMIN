@@ -10,6 +10,8 @@ class Issue {
   final String? photo;
   final String status;
   final String createdAt;
+  final String? inProgressAt;
+  final String? completedAt;
   final List<String> users;
   final int issueCount;
 
@@ -18,6 +20,8 @@ class Issue {
     required this.category,
     required this.address,
     required this.location,
+    required this.inProgressAt,
+    required this.completedAt,
     required this.description,
     required this.title,
     this.photo,
@@ -40,6 +44,8 @@ class Issue {
       createdAt: json['created_at'] ?? '',
       users: List<String>.from(json['users'] ?? []),
       issueCount: json['issue_count'] ?? 0,
+      inProgressAt: json['in_progress_at'],
+      completedAt: json['completed_at'],
     );
   }
 
@@ -56,6 +62,8 @@ class Issue {
       createdAt: createdAt,
       users: users,
       issueCount: issueCount,
+      inProgressAt: inProgressAt,
+      completedAt: completedAt,
     );
   }
 
@@ -84,7 +92,7 @@ class Issue {
     switch (status) {
       case 'new':
         return const Color(0xFFEA580C);
-      case 'in progress':
+      case 'in_progress':
         return const Color(0xFF2563EB);
       case 'completed':
         return const Color(0xFF059669);
@@ -97,7 +105,7 @@ class Issue {
     switch (status) {
       case 'new':
         return const Color(0xFFFFF7ED);
-      case 'in progress':
+      case 'in_progress':
         return const Color(0xFFEFF6FF);
       case 'completed':
         return const Color(0xFFF0FDF4);
@@ -110,7 +118,7 @@ class Issue {
     switch (status) {
       case 'new':
         return Icons.fiber_new_rounded;
-      case 'in progress':
+      case 'in_progress':
         return Icons.work_outline_rounded;
       case 'completed':
         return Icons.check_circle_outline_rounded;
