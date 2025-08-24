@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../models/issue.dart';
-import '../screens/analytics_screen.dart';
+import '../screens/analytics_screen.dart' hide Issue;
 
 class StatsOverview extends StatelessWidget {
   final List<Issue> issues;
