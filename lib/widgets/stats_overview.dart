@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../models/issue.dart';
+import '../screens/analytics_screen.dart';
 
 class StatsOverview extends StatelessWidget {
   final List<Issue> issues;
@@ -80,6 +81,20 @@ class StatsOverview extends StatelessWidget {
         onTap: onShowCritical,
         isActive: showCriticalOnly,
         subtitle: '10+ reports',
+      ),
+      StatData(
+        'Analytics Overview',
+        '',
+        const Color(0xFF4C6EF5),
+        Icons.bar_chart_rounded,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AnalyticsScreen()),
+          );
+        },
+        isActive: false,
+        subtitle: 'View detailed insights',
       ),
     ];
 

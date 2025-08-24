@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/issue.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://localhost:5600';
+  static const String baseUrl = 'https://cdgi-backend-main.onrender.com';
 
   static Future<List<Issue>> getIssues({String? category, int? limit}) async {
     String url = '$baseUrl/issues';
