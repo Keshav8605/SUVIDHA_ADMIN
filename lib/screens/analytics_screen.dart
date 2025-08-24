@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
 
 // Your Issue model (make sure to import this from your model file)
 class Issue {
@@ -150,6 +152,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   bool _isLoading = true;
   List<Issue> _issues = [];
   String _errorMessage = '';
+  GoogleMapController? _mapController;
+  Set<Marker> _markers = {};
 
   @override
   void initState() {
@@ -175,10 +179,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           _issues = jsonData.map((json) => Issue.fromJson(json)).toList();
           _isLoading = false;
         });
+        _createMarkers();
       } else {
         setState(() {
           _errorMessage =
-              'Failed to load issues. Status: ${response.statusCode}';
+          'Failed to load issues. Status: ${response.statusCode}';
           _isLoading = false;
         });
       }
@@ -188,6 +193,47 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         _isLoading = false;
       });
     }
+  }
+
+  void _createMarkers() {
+    final Set<Marker> markers = {};
+
+    for (final issue in _issues) {
+      if (issue.location.latitude != 0.0 && issue.location.longitude != 0.0) {
+        markers.add(
+          Marker(
+            markerId: MarkerId(issue.ticketId),
+            position: LatLng(issue.location.latitude, issue.location.longitude),
+            infoWindow: InfoWindow(
+              title: issue.title.isNotEmpty ? issue.title : 'Issue #${issue.ticketId}',
+              snippet: '${issue.category} - ${issue.priorityText} Priority',
+            ),
+            icon: _getMarkerIcon(issue.priorityText),
+          ),
+        );
+      }
+    }
+
+    setState(() {
+      _markers = markers;
+    });
+  }
+
+  BitmapDescriptor _getMarkerIcon(String priority) {
+    switch (priority) {
+      case 'Critical':
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+      case 'High':
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
+      case 'Medium':
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow);
+      default:
+        return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+    }
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    _mapController = controller;
   }
 
   Map<String, int> get _complaintsBySector {
@@ -325,13 +371,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             child: IconButton(
               icon: _isRefreshing
                   ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Color(0xFF64748B),
-                      ),
-                    )
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Color(0xFF64748B),
+                ),
+              )
                   : const Icon(Icons.refresh, color: Color(0xFF64748B)),
               onPressed: _isRefreshing ? null : _handleRefresh,
             ),
@@ -347,7 +393,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             _buildStatsCards(),
             const SizedBox(height: 24),
 
-            // Charts Section
+            // Charts and Map Section
             if (_issues.isNotEmpty) ...[
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,6 +420,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   ),
                 ],
               ),
+
+              const SizedBox(height: 24),
+
+              // Map Section
+              _buildMapCard(),
 
               const SizedBox(height: 24),
 
@@ -411,6 +462,132 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildMapCard() {
+    List<Marker> markersp = [];
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Issue Locations',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1E293B),
+                    ),
+                  ),
+                  Text(
+                    'Geographic distribution of issues',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF64748B),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildMapLegendItem('Critical', Colors.red),
+                  const SizedBox(width: 12),
+                  _buildMapLegendItem('High', Colors.orange),
+                  const SizedBox(width: 12),
+                  _buildMapLegendItem('Medium', Colors.yellow[700]!),
+                  const SizedBox(width: 12),
+                  _buildMapLegendItem('Low', Colors.green),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Container(
+            height: 400,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: GoogleMap(
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: const CameraPosition(
+                target: LatLng(22.7196, 75.8577), // Indore coordinates
+                zoom: 11.0,
+              ),
+              markers: _markers,
+              mapType: MapType.normal,
+              zoomControlsEnabled: true,
+              compassEnabled: true,
+              myLocationButtonEnabled: true,
+              trafficEnabled: false,
+              buildingsEnabled: true,
+              style: '''[
+                {
+                  "featureType": "poi.business",
+                  "stylers": [{"visibility": "off"}]
+                },
+                {
+                  "featureType": "transit",
+                  "elementType": "labels.icon",
+                  "stylers": [{"visibility": "off"}]
+                }
+              ]''',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMapLegendItem(String label, Color color) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 2,
+                offset: const Offset(0, 1),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 11,
+            color: Color(0xFF64748B),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 
@@ -461,12 +638,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   }
 
   Widget _buildStatCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-    String change,
-  ) {
+      String title,
+      String value,
+      IconData icon,
+      Color color,
+      String change,
+      ) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -591,9 +768,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             enabled: true,
             touchTooltipData: BarTouchTooltipData(
               tooltipBorderRadius: BorderRadius.circular(8),
-
-              // tooltipBgColor: const Color(0xFF1E293B),
-              // tooltipRoundedRadius: 8,
               tooltipMargin: 8,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
