@@ -443,7 +443,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 40),
           Wrap(
             alignment: WrapAlignment.center,
             spacing: 16,
