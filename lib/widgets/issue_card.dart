@@ -378,8 +378,15 @@ class _IssueCardState extends State<IssueCard>
           Expanded(
             child: OutlinedButton.icon(
               onPressed: () => _showIssueDetails(),
-              icon: const Icon(Icons.visibility_rounded, size: 16),
-              label: const Text('Details'),
+              icon: const Icon(
+                Icons.visibility_rounded,
+                size: 16,
+                color: Colors.black,
+              ),
+              label: const Text(
+                'Details',
+                style: TextStyle(color: Colors.black),
+              ),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 side: BorderSide(color: Colors.grey.shade300),
