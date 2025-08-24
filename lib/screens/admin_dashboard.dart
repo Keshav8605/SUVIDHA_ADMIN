@@ -288,11 +288,9 @@ class _AdminDashboardState extends State<AdminDashboard>
       title: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(32),
+            padding: const EdgeInsets.all(25),
             decoration: BoxDecoration(
-              image: const DecorationImage(
-                image: AssetImage("assets/sher.webp"),
-              ),
+              image: DecorationImage(image: AssetImage("assets/sher.webp")),
               // gradient: const LinearGradient(
               //   colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
               // ),
@@ -319,8 +317,9 @@ class _AdminDashboardState extends State<AdminDashboard>
               const Text(
                 'SUVIDHA Admin Portal',
                 style: TextStyle(
+                  letterSpacing: 1,
                   fontSize: 22,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.bold,
                   color: Color(0xFF1A1A1A),
                 ),
               ),
@@ -328,7 +327,7 @@ class _AdminDashboardState extends State<AdminDashboard>
                 'जन सुविधा एवं शिकायत निवारण',
                 style: TextStyle(
                   fontSize: 18,
-                  color: Colors.grey[600],
+                  color: Colors.grey[700],
                   fontWeight: FontWeight.w500,
                 ),
               ),
