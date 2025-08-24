@@ -1,16 +1,12 @@
 import 'package:cdgi_admin/screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 import 'screens/admin_dashboard.dart';
 import 'dart:ui';
 
-void main() async{
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+void main() async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MunicipalAdminApp());
 }
 
@@ -20,19 +16,19 @@ class MunicipalAdminApp extends StatelessWidget {
     return MaterialApp(
       title: 'Suvidha Admin Portal',
       theme: ThemeData(
+        fontFamily: 'Montserrat',
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF667EEA),
           brightness: Brightness.light,
         ),
-        textTheme: GoogleFonts.interTextTheme(),
         scaffoldBackgroundColor: const Color(0xFFF8FAFC),
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
           foregroundColor: const Color(0xFF1E293B),
           elevation: 0,
           centerTitle: false,
-          titleTextStyle: GoogleFonts.inter(
+          titleTextStyle: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w600,
             color: const Color(0xFF1E293B),

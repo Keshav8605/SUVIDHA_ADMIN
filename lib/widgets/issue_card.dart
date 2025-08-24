@@ -109,8 +109,8 @@ class _IssueCardState extends State<IssueCard>
                 Text(
                   widget.issue.title,
                   style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
                     color: Color(0xFF1F2937),
                     height: 1.3,
                   ),
@@ -132,9 +132,9 @@ class _IssueCardState extends State<IssueCard>
                       child: Text(
                         widget.issue.ticketId,
                         style: const TextStyle(
-                          fontSize: 10,
+                          fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF6366F1),
+                          color: Color(0xFF4C00FF),
                           fontFamily: 'monospace',
                         ),
                       ),
@@ -161,19 +161,48 @@ class _IssueCardState extends State<IssueCard>
         children: [
           // Meta information in a clean grid
           _buildMetaGrid(),
-          const SizedBox(height: 12),
-          // Description
-          Text(
-            widget.issue.description,
-            style: const TextStyle(
-              fontSize: 14,
-              height: 1.4,
-              color: Color(0xFF4B5563),
+          const SizedBox(height: 40),
+          Container(
+            constraints: const BoxConstraints(
+              maxHeight: 500, // Maximum allowed height
             ),
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            decoration: BoxDecoration(
+              border: Border.all(color: Color(0xffCBB4FF), width: 1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min, // Take minimum space needed
+              children: [
+                const Text(
+                  "DESCRIPTION",
+                  style: TextStyle(
+                    fontSize: 15,
+                    height: 1.4,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xff4C00FF),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  widget.issue.description,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    height: 1.4,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  // will truncate after 5 lines within 80px
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
+
+          // Description
+          const SizedBox(height: 40),
           // Reports info
           _buildReportsInfo(),
         ],
@@ -193,6 +222,7 @@ class _IssueCardState extends State<IssueCard>
                   Icons.category_rounded,
                   widget.issue.category,
                   const Color(0xFF8B5CF6),
+                  true,
                 ),
               ),
               Expanded(
@@ -200,13 +230,15 @@ class _IssueCardState extends State<IssueCard>
                   Icons.location_on_rounded,
                   _truncateText(widget.issue.address, 25),
                   const Color(0xFF06B6D4),
+                  true,
                 ),
               ),
               Expanded(
                 child: _buildMetaItem(
-                  Icons.access_time_rounded,
+                  Icons.calendar_month,
                   _formatDate(widget.issue.createdAt),
                   const Color(0xFF84CC16),
+                  false,
                 ),
               ),
             ],
@@ -221,13 +253,15 @@ class _IssueCardState extends State<IssueCard>
                       Icons.category_rounded,
                       widget.issue.category,
                       const Color(0xFF8B5CF6),
+                      true,
                     ),
                   ),
                   Expanded(
                     child: _buildMetaItem(
-                      Icons.access_time_rounded,
+                      Icons.calendar_month,
                       _formatDate(widget.issue.createdAt),
                       const Color(0xFF84CC16),
+                      false,
                     ),
                   ),
                 ],
@@ -237,6 +271,7 @@ class _IssueCardState extends State<IssueCard>
                 Icons.location_on_rounded,
                 widget.issue.address,
                 const Color(0xFF06B6D4),
+                true,
               ),
             ],
           );
@@ -245,10 +280,12 @@ class _IssueCardState extends State<IssueCard>
     );
   }
 
-  Widget _buildMetaItem(IconData icon, String text, Color color) {
+  Widget _buildMetaItem(IconData icon, String text, Color color, bool have) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      margin: const EdgeInsets.only(right: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      margin: have
+          ? const EdgeInsets.only(right: 8)
+          : EdgeInsets.symmetric(horizontal: 0),
       decoration: BoxDecoration(
         color: color.withOpacity(0.08),
         borderRadius: BorderRadius.circular(8),
@@ -263,9 +300,9 @@ class _IssueCardState extends State<IssueCard>
             child: Text(
               text,
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: color.withOpacity(0.8),
+                fontSize: 13,
+                fontWeight: FontWeight.w900,
+                color: Colors.black,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -292,7 +329,7 @@ class _IssueCardState extends State<IssueCard>
         children: [
           Icon(
             Icons.people_rounded,
-            size: 16,
+            size: 18,
             color: widget.issue.priorityColor,
           ),
           const SizedBox(width: 8),
@@ -300,9 +337,9 @@ class _IssueCardState extends State<IssueCard>
             child: Text(
               'Reported by ${widget.issue.users.length} user${widget.issue.users.length > 1 ? 's' : ''}',
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: widget.issue.priorityColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
               ),
             ),
           ),
@@ -341,8 +378,15 @@ class _IssueCardState extends State<IssueCard>
           Expanded(
             child: OutlinedButton.icon(
               onPressed: () => _showIssueDetails(),
-              icon: const Icon(Icons.visibility_rounded, size: 16),
-              label: const Text('Details'),
+              icon: const Icon(
+                Icons.visibility_rounded,
+                size: 16,
+                color: Colors.black,
+              ),
+              label: const Text(
+                'Details',
+                style: TextStyle(color: Colors.black),
+              ),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 side: BorderSide(color: Colors.grey.shade300),
@@ -448,7 +492,7 @@ class _IssueCardState extends State<IssueCard>
             widget.issue.priorityText,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 10,
+              fontSize: 13,
               fontWeight: FontWeight.w700,
             ),
           ),
