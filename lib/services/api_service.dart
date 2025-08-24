@@ -66,16 +66,31 @@ class ApiService {
   ) async {
     try {
       final User? currentUser = FirebaseAuth.instance.currentUser;
-
-      final response = await http.put(
-        Uri.parse('$baseUrl/issues/$ticketId/status'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'status': newStatus,
-          'email': currentUser!.email ?? "admin@g.com",
-        }),
-      );
-      return response.statusCode == 200;
+      if (newStatus == "completed") {
+        final response = await http.post(
+          Uri.parse(
+            'https://cdgi-backend-main.onrender.com/issues/$ticketId/complete',
+          ),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({
+            'completion_type': 'admin',
+            'email': currentUser!.email ?? "admin@g.com",
+          }),
+        );
+        print(response.statusCode);
+        print(response.body);
+        return response.statusCode == 200;
+      } else {
+        final response = await http.put(
+          Uri.parse('$baseUrl/issues/$ticketId/status'),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({
+            'status': newStatus,
+            'email': currentUser!.email ?? "admin@g.com",
+          }),
+        );
+        return response.statusCode == 200;
+      }
     } catch (e) {
       print('Error updating issue status: $e');
       return false;
