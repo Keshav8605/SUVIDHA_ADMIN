@@ -36,6 +36,7 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   shimmer: ^3.0.0
   fl_chart:
+  google_maps_flutter: ^2.12.3
 
 dev_dependencies:
   flutter_test:
