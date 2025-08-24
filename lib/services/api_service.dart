@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import '../models/issue.dart';
 
@@ -64,10 +65,15 @@ class ApiService {
     String newStatus,
   ) async {
     try {
+      final User? currentUser = FirebaseAuth.instance.currentUser;
+
       final response = await http.put(
         Uri.parse('$baseUrl/issues/$ticketId/status'),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({'status': newStatus}),
+        body: json.encode({
+          'status': newStatus,
+          'email': currentUser!.email ?? "admin@g.com",
+        }),
       );
       return response.statusCode == 200;
     } catch (e) {
