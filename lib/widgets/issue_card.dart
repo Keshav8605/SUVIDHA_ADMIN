@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/issue.dart';
@@ -520,6 +523,7 @@ class _IssueCardState extends State<IssueCard>
   }
 
   void _showIssueDetails() {
+    Uint8List? decodedBytes = base64Decode(widget.issue.photo!);
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -568,6 +572,7 @@ class _IssueCardState extends State<IssueCard>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildDetailSection('Basic Information', [
+                        Image.memory(decodedBytes, fit: BoxFit.scaleDown),
                         _buildDetailRow('Ticket ID', widget.issue.ticketId),
                         _buildDetailRow('Title', widget.issue.title),
                         _buildDetailRow('Category', widget.issue.category),
