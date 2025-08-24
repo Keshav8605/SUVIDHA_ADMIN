@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class AnalyticsScreen extends StatelessWidget {
+class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
+
+  @override
+  State<AnalyticsScreen> createState() => _AnalyticsScreenState();
+}
+
+class _AnalyticsScreenState extends State<AnalyticsScreen> {
+  bool _isRefreshing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +47,6 @@ class AnalyticsScreen extends StatelessWidget {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        shadowColor: Colors.black.withOpacity(0.1),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF64748B)),
           onPressed: () => Navigator.pop(context),
@@ -49,8 +55,17 @@ class AnalyticsScreen extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(right: 16),
             child: IconButton(
-              icon: const Icon(Icons.refresh, color: Color(0xFF64748B)),
-              onPressed: () {},
+              icon: _isRefreshing
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Color(0xFF64748B),
+                      ),
+                    )
+                  : const Icon(Icons.refresh, color: Color(0xFF64748B)),
+              onPressed: _isRefreshing ? null : _handleRefresh,
             ),
           ),
         ],
@@ -271,7 +286,10 @@ class AnalyticsScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              Icon(Icons.more_horiz, color: const Color(0xFF64748B)),
+              GestureDetector(
+                onTap: () => _showChartOptions(context, title),
+                child: const Icon(Icons.more_horiz, color: Color(0xFF64748B)),
+              ),
             ],
           ),
           const SizedBox(height: 24),
@@ -331,27 +349,34 @@ class AnalyticsScreen extends StatelessWidget {
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      barSpots[index].key.split(' ')[0],
+                      barSpots[index].key.length > 15
+                          ? '${barSpots[index].key.substring(0, 12)}...'
+                          : barSpots[index].key.replaceAll(' & ', '\n& '),
                       style: const TextStyle(
-                        fontSize: 11,
+                        fontSize: 10,
                         color: Color(0xFF64748B),
                         fontWeight: FontWeight.w500,
                       ),
                       textAlign: TextAlign.center,
+                      maxLines: 2,
                     ),
                   );
                 },
               ),
             ),
-            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
           ),
           borderData: FlBorderData(show: false),
           gridData: FlGridData(
             show: true,
             horizontalInterval: 5,
             getDrawingHorizontalLine: (value) {
-              return FlLine(color: const Color(0xFFF1F5F9), strokeWidth: 1);
+              return const FlLine(color: Color(0xFFF1F5F9), strokeWidth: 1);
             },
             drawVerticalLine: false,
           ),
@@ -389,66 +414,65 @@ class AnalyticsScreen extends StatelessWidget {
 
     return SizedBox(
       height: 280,
-      child: Stack(
+      child: Column(
         children: [
-          PieChart(
-            PieChartData(
-              sections: data.entries.map((entry) {
-                final percentage = (entry.value / total * 100);
-                return PieChartSectionData(
-                  color: _getStatusColor(entry.key),
-                  value: entry.value.toDouble(),
-                  title: '${percentage.toStringAsFixed(1)}%',
-                  radius: 60,
-                  titleStyle: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                  badgeWidget: null,
-                );
-              }).toList(),
-              sectionsSpace: 2,
-              centerSpaceRadius: 50,
-              pieTouchData: PieTouchData(
-                touchCallback: (FlTouchEvent event, pieTouchResponse) {},
-                enabled: true,
+          SizedBox(
+            height: 180,
+            child: PieChart(
+              PieChartData(
+                sections: data.entries.map((entry) {
+                  final percentage = (entry.value / total * 100);
+                  return PieChartSectionData(
+                    color: _getStatusColor(entry.key),
+                    value: entry.value.toDouble(),
+                    title: percentage > 8
+                        ? '${percentage.toStringAsFixed(1)}%'
+                        : '',
+                    radius: 70,
+                    titleStyle: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                    ),
+                    titlePositionPercentageOffset: 0.6,
+                  );
+                }).toList(),
+                sectionsSpace: 3,
+                centerSpaceRadius: 45,
+                pieTouchData: PieTouchData(enabled: true),
               ),
             ),
           ),
-          Positioned(
-            top: 200,
-            left: 0,
-            right: 0,
-            child: Column(
-              children: data.entries.map((entry) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 12,
-                        height: 12,
-                        decoration: BoxDecoration(
-                          color: _getStatusColor(entry.key),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        entry.key,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFF64748B),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+          const SizedBox(height: 20),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 16,
+            runSpacing: 8,
+            children: data.entries.map((entry) {
+              final percentage = (entry.value / total * 100);
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: _getStatusColor(entry.key),
+                      shape: BoxShape.circle,
+                    ),
                   ),
-                );
-              }).toList(),
-            ),
+                  const SizedBox(width: 6),
+                  Text(
+                    '${entry.key} (${percentage.toStringAsFixed(1)}%)',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF64748B),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              );
+            }).toList(),
           ),
         ],
       ),
@@ -472,10 +496,10 @@ class AnalyticsScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 'Recent Activity',
                 style: TextStyle(
                   fontSize: 18,
@@ -483,12 +507,15 @@ class AnalyticsScreen extends StatelessWidget {
                   color: Color(0xFF1E293B),
                 ),
               ),
-              Text(
-                'View all',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF3B82F6),
-                  fontWeight: FontWeight.w500,
+              GestureDetector(
+                onTap: _handleViewAllActivity,
+                child: const Text(
+                  'View all',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF3B82F6),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
@@ -592,30 +619,189 @@ class AnalyticsScreen extends StatelessWidget {
     );
   }
 
+  Future<void> _handleRefresh() async {
+    setState(() {
+      _isRefreshing = true;
+    });
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    setState(() {
+      _isRefreshing = false;
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Analytics data refreshed successfully'),
+          backgroundColor: Color(0xFF10B981),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  void _handleViewAllActivity() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 8),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                'All Recent Activity',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF1E293B),
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                children: [
+                  _buildActivityItem(
+                    'Water Logging - Scheme 45',
+                    'Water & Drainage',
+                    '1 hour ago',
+                    'high',
+                  ),
+                  _buildActivityItem(
+                    'Street Light Not Working',
+                    'Electricity & Streetlights',
+                    '3 hours ago',
+                    'medium',
+                  ),
+                  _buildActivityItem(
+                    'Garbage Collection Delayed',
+                    'Sanitation & Waste',
+                    '5 hours ago',
+                    'medium',
+                  ),
+                  _buildActivityItem(
+                    'Road Pothole Repair',
+                    'Roads & Transport',
+                    '8 hours ago',
+                    'low',
+                  ),
+                  _buildActivityItem(
+                    'Park Maintenance Required',
+                    'Environment & Parks',
+                    '1 day ago',
+                    'low',
+                  ),
+                  _buildActivityItem(
+                    'Building Permit Issue',
+                    'Building & Infrastructure',
+                    '1 day ago',
+                    'medium',
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showChartOptions(BuildContext context, String chartTitle) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$chartTitle Options',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF1E293B),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ListTile(
+              leading: const Icon(Icons.download, color: Color(0xFF64748B)),
+              title: const Text('Export Data'),
+              onTap: () {
+                Navigator.pop(context);
+                _showSnackBar('Chart data exported successfully');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.share, color: Color(0xFF64748B)),
+              title: const Text('Share Chart'),
+              onTap: () {
+                Navigator.pop(context);
+                _showSnackBar('Chart shared successfully');
+              },
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: const Color(0xFF3B82F6),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   Color _getPremiumColor(String key) {
     switch (key) {
       case 'Sanitation & Waste':
-        return const Color(0xFF10B981); // Green
+        return const Color(0xFF10B981);
       case 'Water & Drainage':
-        return const Color(0xFF06B6D4); // Cyan
+        return const Color(0xFF06B6D4);
       case 'Electricity & Streetlights':
-        return const Color(0xFF3B82F6); // Blue
+        return const Color(0xFF3B82F6);
       case 'Roads & Transport':
-        return const Color(0xFF8B5CF6); // Purple
+        return const Color(0xFF8B5CF6);
       case 'Public Health & Safety':
-        return const Color(0xFFEF4444); // Red
+        return const Color(0xFFEF4444);
       case 'Environment & Parks':
-        return const Color(0xFF22C55E); // Light Green
+        return const Color(0xFF22C55E);
       case 'Building & Infrastructure':
-        return const Color(0xFFF59E0B); // Amber
+        return const Color(0xFFF59E0B);
       case 'Taxes & Documentation':
-        return const Color(0xFF6366F1); // Indigo
+        return const Color(0xFF6366F1);
       case 'Emergency Services':
-        return const Color(0xFFDC2626); // Dark Red
+        return const Color(0xFFDC2626);
       case 'Animal Care & Control':
-        return const Color(0xFF84CC16); // Lime
+        return const Color(0xFF84CC16);
       case 'Other':
-        return const Color(0xFF64748B); // Gray
+        return const Color(0xFF64748B);
       default:
         return const Color(0xFF64748B);
     }
