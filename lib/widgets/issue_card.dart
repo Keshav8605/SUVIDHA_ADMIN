@@ -414,7 +414,7 @@ class _IssueCardState extends State<IssueCard>
                 ),
               ),
             ),
-          ] else if (widget.issue.status == 'in progress') ...[
+          ] else if (widget.issue.status == 'in_progress') ...[
             Expanded(
               flex: 2,
               child: ElevatedButton.icon(

@@ -28,7 +28,7 @@ class StatsOverview extends StatelessWidget {
   Widget build(BuildContext context) {
     final newIssues = issues.where((i) => i.status == 'new').length;
     final inProgressIssues = issues
-        .where((i) => i.status == 'in progress')
+        .where((i) => i.status == 'in_progress')
         .length;
     final completedIssues = issues.where((i) => i.status == 'completed').length;
     final criticalIssues = issues.where((i) => i.issueCount >= 10).length;
@@ -60,8 +60,8 @@ class StatsOverview extends StatelessWidget {
         inProgressIssues.toString(),
         const Color(0xFF4ECDC4),
         Icons.work_outline_rounded,
-        onTap: () => onStatusFilterChanged('in progress'),
-        isActive: selectedStatus == 'in progress',
+        onTap: () => onStatusFilterChanged('in_progress'),
+        isActive: selectedStatus == 'in_progress',
         subtitle: 'Being resolved',
       ),
       StatData(

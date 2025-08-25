@@ -94,7 +94,7 @@ class FilterBar extends StatelessWidget {
       items: const [
         DropdownMenuItem(value: '', child: Text('All Status')),
         DropdownMenuItem(value: 'new', child: Text('New')),
-        DropdownMenuItem(value: 'in progress', child: Text('In Progress')),
+        DropdownMenuItem(value: 'in_progress', child: Text('In Progress')),
         DropdownMenuItem(value: 'completed', child: Text('Completed')),
       ],
       onChanged: (value) => onStatusChanged(value ?? ''),

@@ -14,11 +14,19 @@ class Issue {
   final String? completedAt;
   final List<String> users;
   final int issueCount;
+  final String? updatedBy;
+  final dynamic originalText;
 
+  final String? admin_completed_at;
+  final String? user_completed_at;
+  final String? admin_completed_by;
+  final String? user_completed_by;
   Issue({
     required this.ticketId,
     required this.category,
     required this.address,
+    required this.updatedBy,
+    required this.originalText,
     required this.location,
     required this.inProgressAt,
     required this.completedAt,
@@ -29,6 +37,10 @@ class Issue {
     required this.createdAt,
     required this.users,
     required this.issueCount,
+    required this.admin_completed_at,
+    required this.user_completed_at,
+    required this.admin_completed_by,
+    required this.user_completed_by,
   });
 
   factory Issue.fromJson(Map<String, dynamic> json) {
@@ -44,8 +56,14 @@ class Issue {
       createdAt: json['created_at'] ?? '',
       users: List<String>.from(json['users'] ?? []),
       issueCount: json['issue_count'] ?? 0,
-      inProgressAt: json['in_progress_at'],
-      completedAt: json['completed_at'],
+      inProgressAt: json['in_progress_at'] ?? '',
+      completedAt: json['completed_at'] ?? '',
+      updatedBy: json['updated_by_email'] ?? '',
+      originalText: json['original_text'] ?? '',
+      admin_completed_at: json['admin_completed_at'] ?? '',
+      user_completed_at: json['user_completed_at'] ?? '',
+      admin_completed_by: json['admin_completed_by'] ?? '',
+      user_completed_by: json['user_completed_by'] ?? '',
     );
   }
 
@@ -64,6 +82,12 @@ class Issue {
       issueCount: issueCount,
       inProgressAt: inProgressAt,
       completedAt: completedAt,
+      updatedBy: updatedBy,
+      originalText: originalText,
+      admin_completed_at: admin_completed_at,
+      user_completed_at: user_completed_at,
+      admin_completed_by: admin_completed_by,
+      user_completed_by: user_completed_by,
     );
   }
 
