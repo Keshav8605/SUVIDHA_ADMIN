@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import '../models/issue.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://cdgi-backend-main.onrender.com';
+  static const String baseUrl = 'https://suvidha-backend-fmw2.onrender.com';
 
   static Future<List<Issue>> getIssues({String? category, int? limit}) async {
     String url = '$baseUrl/issues';
@@ -69,7 +69,7 @@ class ApiService {
       if (newStatus == "completed") {
         final response = await http.post(
           Uri.parse(
-            'https://cdgi-backend-main.onrender.com/issues/$ticketId/complete',
+            'https://suvidha-backend-fmw2.onrender.com/issues/$ticketId/complete',
           ),
           headers: {'Content-Type': 'application/json'},
           body: json.encode({
