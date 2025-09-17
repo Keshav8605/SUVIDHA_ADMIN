@@ -169,7 +169,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       });
 
       final response = await http.get(
-        Uri.parse('https://suvidha-backend-fmw2.onrender.com/issues'),
+        Uri.parse('https://cdgi-backend-main.onrender.com/issues'),
         headers: {'Content-Type': 'application/json'},
       );
 
