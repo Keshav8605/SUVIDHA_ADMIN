@@ -5,13 +5,11 @@ set -o errexit
 git clone https://github.com/flutter/flutter.git /tmp/flutter
 export PATH="/tmp/flutter/bin:$PATH"
 
-# Initialize Flutter
-flutter doctor
-
-# Enable web support
+# Pre-cache Flutter artifacts for web
 flutter config --enable-web
+flutter precache --web
 
-# Get dependencies
+# Get project dependencies
 flutter pub get
 
 # Build web release
