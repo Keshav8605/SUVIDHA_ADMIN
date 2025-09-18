@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
 set -o errexit
 
-# Download Flutter
-git clone https://github.com/flutter/flutter.git /tmp/flutter
+(
+  git clone https://github.com/flutter/flutter.git /tmp/flutter
+  export PATH="/tmp/flutter/bin:$PATH"
 
-# Pre-cache Flutter for web
-/tmp/flutter/bin/flutter config --enable-web
-/tmp/flutter/bin/flutter precache --web
-
-# Get dependencies
-/tmp/flutter/bin/flutter pub get
-
-# Build web release
-/tmp/flutter/bin/flutter build web --release
+  flutter config --enable-web
+  flutter precache --web
+  flutter pub get
+  flutter build web --release
+)
