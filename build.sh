@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 set -o errexit
 
-# Install Flutter
-git clone https://github.com/flutter/flutter.git
-export PATH="$(pwd)/flutter/bin:$PATH"
+# Download & install Flutter into the build environment
+git clone https://github.com/flutter/flutter.git /tmp/flutter
+export PATH="/tmp/flutter/bin:$PATH"
 
-# Initialize Flutter (downloads artifacts)
+# Initialize Flutter
 flutter doctor
 
-# Enable web
+# Enable web support
 flutter config --enable-web
 
-# Get project dependencies
+# Get dependencies
 flutter pub get
 
 # Build web release
