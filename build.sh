@@ -3,14 +3,17 @@
 set -o errexit
 
 # Install Flutter
-git clone https://github.com/flutter/flutter.git && ./flutter/bin/flutter pub get
-export PATH="$PATH:pwd/flutter/bin"
+git clone https://github.com/flutter/flutter.git
+export PATH="$(pwd)/flutter/bin:$PATH"
+
+# Initialize Flutter
+flutter doctor
 
 # Enable web
 flutter config --enable-web
 
-# Get dependencies
+# Get project dependencies
 flutter pub get
 
-# Build web
+# Build web release
 flutter build web --release
