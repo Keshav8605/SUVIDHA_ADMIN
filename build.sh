@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
-# fail on first error
 set -o errexit
 
 # Install Flutter
 git clone https://github.com/flutter/flutter.git
 export PATH="$(pwd)/flutter/bin:$PATH"
 
-# Initialize Flutter
+# Initialize Flutter (downloads artifacts)
 flutter doctor
 
 # Enable web
