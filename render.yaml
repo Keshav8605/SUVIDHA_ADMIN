@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: suvidha-admin
+    env: static
+    buildCommand: |
+      git clone https://github.com/flutter/flutter.git /tmp/flutter
+      cd /tmp/flutter
+      ./bin/flutter doctor
+      ./bin/flutter config --enable-web
+      ./bin/flutter precache --web
+      cd /opt/render/project/src
+      /tmp/flutter/bin/flutter pub get
+      /tmp/flutter/bin/flutter build web --release
+    staticPublishPath: build/web
