@@ -290,7 +290,7 @@ class _AdminDashboardState extends State<AdminDashboard>
           Container(
             padding: const EdgeInsets.all(25),
             decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage("assets/sher.webp")),
+              image: const DecorationImage(image: AssetImage("assets/Suvidhalogo.png")),
               // gradient: const LinearGradient(
               //   colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
               // ),

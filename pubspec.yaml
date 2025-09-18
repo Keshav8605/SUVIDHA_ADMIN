@@ -36,9 +36,14 @@ dependencies:
   shimmer: ^3.0.0
   fl_chart:
   google_maps_flutter: ^2.12.3
+  flutter_map: ^6.1.0
   firebase_core: ^4.0.0
   firebase_auth: ^6.0.1
   cloud_firestore: ^6.0.0
+  file_saver: ^0.3.1
+  pdf: ^3.11.3
+  printing: ^5.14.2
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
