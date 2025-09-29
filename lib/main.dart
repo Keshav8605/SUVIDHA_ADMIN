@@ -1,11 +1,12 @@
-import 'package:cdgi_admin/screens/login_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:cdgi_admin/screens/Worker_login.dart';
+import 'package:cdgi_admin/screens/role_selection.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'screens/admin_dashboard.dart';
-import 'dart:ui';
+import 'screens/login_screen.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MunicipalAdminApp());
 }
@@ -14,7 +15,7 @@ class MunicipalAdminApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Suvidha Admin Portal',
+      title: 'Suvidha Portal',
       theme: ThemeData(
         fontFamily: 'Montserrat',
         useMaterial3: true,
@@ -59,8 +60,12 @@ class MunicipalAdminApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const LoginScreen(),
+      home: const RoleSelectionScreen(), // Start with role selection
       debugShowCheckedModeBanner: false,
+      routes: {
+        '/admin-login': (context) => const LoginScreen(),
+        '/worker-login': (context) => const WorkerLoginScreen(),
+      },
     );
   }
 }
