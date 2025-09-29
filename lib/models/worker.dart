@@ -115,17 +115,17 @@ class Worker {
 class Department {
   final String id;
   final String name;
-  final List<String>? categories;
+  final List<String> categories;
   final bool? isActive;
-  final String? createdAt;
+  final String createdAt;
   final String? updatedAt;
 
   Department({
     required this.id,
     required this.name,
-     this.categories,
-     this.isActive,
-     this.createdAt,
+    required this.categories,
+    required this.isActive,
+    required this.createdAt,
     this.updatedAt,
   });
 

@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
-
-import '../models/assignment.dart' show Assignment;
-import '../models/issue.dart' show Issue;
-import '../models/worker.dart' show Worker, Department;
-
+import '../models/assignment.dart';
+import '../models/issue.dart';
+import '../models/worker.dart';
 
 class ApiService {
   static const String baseUrl = 'https://suvidha-backend-fmw2.onrender.com';
@@ -181,30 +179,22 @@ class ApiService {
       throw Exception('Error fetching workers: $e');
     }
   }
-// lib/models/department.dart
-
 
   // ---------------- Department Management ----------------
   static Future<List<Department>> getDepartments() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/departments'));
 
-    // ---------------- Department Management ----------------static Future<List<Department>> getDepartments() async {
-    // Hardcoded list of departments
-    await Future.delayed(const Duration(milliseconds: 100)); // Simulate network delay
-    return [
-      Department(id: '1', name: 'Sanitation & Waste'),
-      Department(id: '2', name: 'Water & Drainage'),
-      Department(id: '3', name: 'Electricity & Streetlights'),
-      Department(id: '4', name: 'Roads & Transport'),
-      Department(id: '5', name: 'Public Health & Safety'),
-      Department(id: '6', name: 'Environment & Parks'),
-      Department(id: '7', name: 'Building & Infrastructure'),
-      Department(id: '8', name: 'Taxes & Documentation'),
-      Department(id: '9', name: 'Emergency Services'),
-      Department(id: '10', name: 'Animal Care & Control'),
-      Department(id: '11', name: 'Other'),
-    ];
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = json.decode(response.body);
+        return jsonData.map((json) => Department.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load departments: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching departments: $e');
+    }
   }
-
 
   // ---------------- Assignment Management ----------------
   static Future<List<Assignment>> getAssignments() async {
@@ -317,5 +307,3 @@ class ApiService {
     }
   }
 }
-
-

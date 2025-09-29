@@ -1,5 +1,4 @@
 // worker_login_screen.dart
-import 'package:cdgi_admin/models/worker.dart';
 import 'package:cdgi_admin/screens/worker_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -316,8 +315,7 @@ class _WorkerSignupScreenState extends State<WorkerSignupScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String? _selectedDepartment;
-  List<Map<String, dynamic>> _departments = [
-  ];
+  List<Map<String, dynamic>> _departments = [];
   bool _loading = false;
   bool _obscurePassword = true;
 
@@ -340,15 +338,9 @@ class _WorkerSignupScreenState extends State<WorkerSignupScreen> {
 
   Future<void> _loadDepartments() async {
     try {
-      final List<Department> departments = await ApiService.getDepartments();
-      departments.forEach((element) {
-        _departments.add({'_id': element.id, 'name': element.name});
-      });
-      setState(() {
-
-      });
+      final departments = await ApiService.getDepartments();
+      setState(() => _departments = departments.cast<Map<String, dynamic>>());
     } catch (e) {
-      print("error : ${e.toString()}");
       // Use default departments if API fails
       setState(() {
         _departments = [
