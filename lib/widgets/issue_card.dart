@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/issue.dart';
@@ -64,15 +62,15 @@ class _IssueCardState extends State<IssueCard>
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: _isHovered
-                      ? widget.issue.priorityColor.withOpacity(0.3)
+                      ? widget.issue.priorityColor.withValues(alpha: 0.3)
                       : Colors.grey.shade200,
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: _isHovered
-                        ? widget.issue.priorityColor.withOpacity(0.1)
-                        : Colors.black.withOpacity(0.05),
+                        ? widget.issue.priorityColor.withValues(alpha: 0.1)
+                        : Colors.black.withValues(alpha: 0.05),
                     blurRadius: _isHovered ? 20 : 8,
                     offset: Offset(0, _isHovered ? 8 : 2),
                   ),
@@ -93,7 +91,7 @@ class _IssueCardState extends State<IssueCard>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: widget.issue.priorityColor.withOpacity(0.05),
+        color: widget.issue.priorityColor.withValues(alpha: 0.05),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(15),
           topRight: Radius.circular(15),
@@ -126,7 +124,7 @@ class _IssueCardState extends State<IssueCard>
                         vertical: 3,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF6366F1).withOpacity(0.1),
+                        color: const Color(0xFF6366F1).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -285,11 +283,11 @@ class _IssueCardState extends State<IssueCard>
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       margin: have
           ? const EdgeInsets.only(right: 8)
-          : EdgeInsets.symmetric(horizontal: 0),
+          : const EdgeInsets.symmetric(horizontal: 0),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -299,7 +297,7 @@ class _IssueCardState extends State<IssueCard>
           Flexible(
             child: Text(
               text,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w900,
                 color: Colors.black,
@@ -318,12 +316,12 @@ class _IssueCardState extends State<IssueCard>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            widget.issue.priorityColor.withOpacity(0.08),
-            widget.issue.priorityColor.withOpacity(0.03),
+            widget.issue.priorityColor.withValues(alpha: 0.08),
+            widget.issue.priorityColor.withValues(alpha: 0.03),
           ],
         ),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: widget.issue.priorityColor.withOpacity(0.2)),
+        border: Border.all(color: widget.issue.priorityColor.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
@@ -436,25 +434,25 @@ class _IssueCardState extends State<IssueCard>
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF059669).withOpacity(0.1),
+                  color: const Color(0xFF059669).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: const Color(0xFF059669).withOpacity(0.3),
+                    color: const Color(0xFF059669).withValues(alpha: 0.3),
                   ),
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.check_circle_rounded,
                       size: 16,
-                      color: const Color(0xFF059669),
+                      color: Color(0xFF059669),
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(width: 6),
                     Text(
                       'Completed',
                       style: TextStyle(
-                        color: const Color(0xFF059669),
+                        color: Color(0xFF059669),
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ),
@@ -477,7 +475,7 @@ class _IssueCardState extends State<IssueCard>
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: widget.issue.priorityColor.withOpacity(0.3),
+            color: widget.issue.priorityColor.withValues(alpha: 0.3),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -507,7 +505,7 @@ class _IssueCardState extends State<IssueCard>
       decoration: BoxDecoration(
         color: widget.issue.statusBackgroundColor,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: widget.issue.statusColor.withOpacity(0.3)),
+        border: Border.all(color: widget.issue.statusColor.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -670,11 +668,11 @@ class _IssueCardState extends State<IssueCard>
                                   ),
                                   decoration: BoxDecoration(
                                     color: widget.issue.priorityColor
-                                        .withOpacity(0.1),
+                                        .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(
                                       color: widget.issue.priorityColor
-                                          .withOpacity(0.2),
+                                          .withValues(alpha: 0.2),
                                     ),
                                   ),
                                   child: Text(

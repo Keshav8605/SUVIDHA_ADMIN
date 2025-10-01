@@ -68,7 +68,7 @@ class _WorkerAssignmentScreenState extends State<WorkerAssignmentScreen>
 
   Department? _getDepartmentForCategory(String category) {
     return _departments.firstWhere(
-          (dept) => dept.categories!.contains(category),
+          (dept) => dept.categories.contains(category),
       orElse: () => Department(
         id: '',
         name: 'Unknown',

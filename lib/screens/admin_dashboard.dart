@@ -8,8 +8,6 @@ import '../widgets/issue_card.dart';
 import '../widgets/filter_bar.dart';
 import '../widgets/stats_overview.dart';
 import '../widgets/loading_shimmer.dart';
-import 'analytics_screen.dart' hide Issue;
-
 class AdminDashboard extends StatefulWidget {
   @override
   _AdminDashboardState createState() => _AdminDashboardState();
@@ -184,10 +182,10 @@ class _AdminDashboardState extends State<AdminDashboard>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.filter_alt_rounded,
                   color: Colors.white,
                   size: 20,
@@ -224,7 +222,7 @@ class _AdminDashboardState extends State<AdminDashboard>
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(Icons.error_outline, color: Colors.white),
@@ -250,10 +248,10 @@ class _AdminDashboardState extends State<AdminDashboard>
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(Icons.check_circle_outline, color: Colors.white),
+              child: const Icon(Icons.check_circle_outline, color: Colors.white),
             ),
             const SizedBox(width: 12),
             Expanded(child: Text(message)),
@@ -334,7 +332,7 @@ class _AdminDashboardState extends State<AdminDashboard>
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF059669).withOpacity(0.3),
+                color: const Color(0xFF059669).withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -366,8 +364,8 @@ class _AdminDashboardState extends State<AdminDashboard>
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      const Color(0xFF667EEA).withOpacity(0.1),
-                      const Color(0xFF764BA2).withOpacity(0.1),
+                      const Color(0xFF667EEA).withValues(alpha: 0.1),
+                      const Color(0xFF764BA2).withValues(alpha: 0.1),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(12),
@@ -474,12 +472,12 @@ class _AdminDashboardState extends State<AdminDashboard>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  emptyColor.withOpacity(0.1),
-                  emptyColor.withOpacity(0.05),
+                  emptyColor.withValues(alpha: 0.1),
+                  emptyColor.withValues(alpha: 0.05),
                 ],
               ),
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(color: emptyColor.withOpacity(0.2), width: 2),
+              border: Border.all(color: emptyColor.withValues(alpha: 0.2), width: 2),
             ),
             child: Icon(emptyIcon, size: 80, color: emptyColor),
           ),
@@ -514,7 +512,7 @@ class _AdminDashboardState extends State<AdminDashboard>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF667EEA).withOpacity(0.3),
+                    color: const Color(0xFF667EEA).withValues(alpha: 0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
                   ),
@@ -570,140 +568,6 @@ class _AdminDashboardState extends State<AdminDashboard>
           );
         },
       ),
-    );
-  }
-  PreferredSizeWidget _buildAppBarWithWorkerAssignment() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      title: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(25),
-            decoration: BoxDecoration(
-              image: const DecorationImage(image: AssetImage("assets/Suvidhalogo.png")),
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
-          const SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'SUVIDHA Admin Portal',
-                style: TextStyle(
-                  letterSpacing: 1,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1A1A1A),
-                ),
-              ),
-              Text(
-                'जन सुविधा एवं शिकायत निवारण',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey[700],
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-      actions: [
-        // Worker Assignment Button
-        Container(
-          margin: const EdgeInsets.only(right: 8),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF059669), Color(0xFF047857)],
-            ),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF059669).withOpacity(0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: IconButton(
-            icon: const Icon(Icons.engineering_outlined),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const WorkerAssignmentScreen()),
-              );
-            },
-            tooltip: 'Worker Assignment',
-            style: IconButton.styleFrom(
-              foregroundColor: Colors.white,
-            ),
-          ),
-        ),
-        // Analytics Button
-        Container(
-          margin: const EdgeInsets.only(right: 8),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                const Color(0xFF8B5CF6),
-                const Color(0xFF7C3AED),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF8B5CF6).withOpacity(0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: IconButton(
-            icon: const Icon(Icons.analytics_outlined),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const AnalyticsScreen()),
-              );
-            },
-            tooltip: 'Analytics',
-            style: IconButton.styleFrom(
-              foregroundColor: Colors.white,
-            ),
-          ),
-        ),
-        // Existing refresh button
-        AnimatedBuilder(
-          animation: _refreshAnimation,
-          builder: (context, child) {
-            return Transform.rotate(
-              angle: _refreshAnimation.value * 2 * 3.14159,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFF667EEA).withOpacity(0.1),
-                      const Color(0xFF764BA2).withOpacity(0.1),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.refresh_rounded),
-                  onPressed: isLoading ? null : loadData,
-                  tooltip: 'Refresh Data',
-                  style: IconButton.styleFrom(
-                    foregroundColor: const Color(0xFF667EEA),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-        const SizedBox(width: 16),
-      ],
     );
   }
 }
